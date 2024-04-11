@@ -97,3 +97,113 @@ function inverteString(entrada){
     const string = entrada.string;
     return string.split('').reverse().join('');
 }
+
+function somaValoresObjeto(objeto){
+    let soma = 0;
+    for (let chave in objeto){
+        if (typeof objeto[chave] === 'number'){
+            soma += objeto[chave];
+        }
+    }
+    return soma;
+}
+
+function ehPrimo(n){
+    for (let i = 2; i<=Math.sqrt(n); i++){
+        if (n % i === 0){
+            return false;
+        }
+    }
+    return true;
+}
+
+function nPrimo(n){
+    let count = 0;
+    let num = 2;
+
+    while (true){
+        if (ehPrimo(num)){
+            count++;
+            if (count === n){
+                return num;
+            }
+        }
+        num++;
+    }
+}
+
+function maiorPrefixoComum(strings){
+    if (strings.length === 0) return '';
+
+    let prefixo = '';
+
+    for (let i = 0; i<strings[0].length; i++){
+        const char = strings[0][i];
+        for (let j=1; j<strings.length;j++){
+            if (i === strings[j].length || strings[j][i] !== char){
+                return prefixo;
+            }
+        }
+        prefixo += char;
+    }
+    return prefixo;
+}
+
+function somaSegundoMaiorMenor(numeros){
+    numeros.sort((a,b) => a-b);
+    let segundo_menor = numeros[1];
+    let segundo_maior = numeros[numeros.length-2];
+    return segundo_maior+segundo_menor;
+}
+
+function contaPalindromos(palavras){
+    let contador = 0;
+
+    function ehPalindromo(palavra){
+        return palavra === palavra.split('').reverse().join('');
+    }
+
+    for (let palavra of palavras){
+        if (ehPalindromo(palavra)){
+            contador++;
+        }
+    }
+    return contador;
+}
+
+function somaStrings(strings){
+    return strings.map(str => parseInt(str,10)).reduce((soma, num) => soma + num, 0);
+}
+
+async function somaComRequisicoes(endpoints){
+    let soma = 0;
+
+    async function obterValor(endpoint){
+        const response = await fetch(endpoint);
+        const data = await response.json();
+        return data.valor; // modificar o valor dps
+    }
+
+    for (let endpoint of endpoints){
+        soma += await obterValor(endpoint);
+    }
+    return soma;
+}
+
+async function cacarTesouro(urlInicial){
+    let urlAtual = urlInicial;
+
+    while (true){
+        const response = await fetch(urlAtual);
+        const data = await response.json();
+
+        if (typeof data === 'number'){
+            return data
+        } else if (typeof data === 'string'){
+            urlAtual = data;
+        } else {
+            throw new Error("Tesouro não encontrado.");
+        }
+    }
+}
+
